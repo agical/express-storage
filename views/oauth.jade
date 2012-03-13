@@ -3,26 +3,28 @@ html(lang="en")
   head
     title OAuth
     // link(href="/stylesheets/screen.css", media="screen, projection", rel="stylesheet", type="text/css")
+    script(type='text/javascript', src="https://browserid.org/include.js")
+    script(type='text/javascript', src="../oauth.js")
   body
     #container
       header
         h1 Express Storage
         h2 OAuth
-      #content
+      #wait
+        Please wait...
+      #allow
 
   - if (redirectUri != undefined)
-    form(method="POST")
       p
-        | UserId:
-        br
-        input(type="text", name="userId", value="#{userId}")
+        | UserId: #{userId}
       p
-        | Password:
+        | App: #{redirectUri}
+      p
+        | Categories: #{scope}
         br
-        input(type="password", name="password", value="")
-      input(type="hidden", name="redirectUri", value="#{redirectUri}")
-      input(type="hidden", name="scope", value="#{scope}")
-      input(type="submit", value="Allow")
+      input(type="submit", value="Allow", onclick="go();")
+      form(method="POST")
+        input(type="hidden", id="assertion", name="assertion")
   - else
     p
       Please add ?redirect_uri=http://localhost/bla to the address
