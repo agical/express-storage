@@ -5,6 +5,6 @@ function go() {
     document.getElementById('assertion').value=assertion;
     document.forms[0].submit();
   }, {
-    requiredEmail: 'michiel@unhosted.org'
+    requiredEmail: document.getElementById('userAddress').value
   });
 }

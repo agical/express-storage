@@ -3,7 +3,7 @@
 var express = require('express');
 var util = require('util');
 var _ = require('./lib/vendor/underscore.js')._;
-var config = require('./config.js').config;
+var config = require('../config.js').config;//having some trouble with .gitignore here
 var webfinger = require('./lib/webfinger.js').webfinger;
 var storage = require('./lib/express-storage.js').storage;
 
@@ -56,25 +56,33 @@ app.get(/^\/webfinger\/acct:(?:(.+))/, function(req, res){
 });
 
 app.get('/_oauth/:user', function(req, res){
-  var userId = req.params.user;
-
-  res.render('oauth', {
-    userId: userId,
+  var paramsObj ={
+    userAddress: req.params.user.toLowerCase(),
     redirectUri: req.param('redirect_uri'),
-    scope: req.param('scope', 'public')
-  });
+    scope: req.param('scope').toLowerCase()
+  };
+  //remember no real input validation can be done here yet, because this will construct a form that still goes to the client-side:
+  if(paramsObj.userAddress && paramsObj.redirectUri && paramsObj.scope && /^([a-z0-9_\.\-])+\@(([a-z0-9\-])+\.)+([a-z0-9]{2,4})+$/.test(paramsObj.userAddress)){
+    res.render('oauth', paramsObj);
+  } else {
+    //this error message is purely informational:
+    res.render('paramsError');
+  }
 });
 
 app.post(/^\/_oauth\/(?:(.+))/, function(req, res){
-    var token = storage.generateToken();
-
-    storage.createToken(req.param('userId'), req.param('password'), token, req.param('scope'), function(result) {
-      if(result) {
-        res.redirect(req.param('redirectUri')+'#access_token='+token);
-      } else {
-        res.send("No, bro.", 401);
-      }
-    });
+  //remember all actual input validation is done inside the createToken function:
+  storage.getToken({
+    userAddress: req.param('userAddress'),
+    assertion: req.param('assertion'),
+    scope: req.param('scope')
+  }, function(err, token) {
+    if(!err) {
+      res.redirect(req.param('redirectUri')+'#access_token='+token);
+    } else {
+      res.send("No, bro.", 401);
+    }
+  });
 });
 
 app.get("/create_test_user", function(req, res){

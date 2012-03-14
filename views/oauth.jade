@@ -2,9 +2,8 @@
 html(lang="en")
   head
     title OAuth
-    // link(href="/stylesheets/screen.css", media="screen, projection", rel="stylesheet", type="text/css")
+    link(href="/stylesheets/screen.css", media="screen, projection", rel="stylesheet", type="text/css")
     script(type='text/javascript', src="https://browserid.org/include.js")
-    script(type='text/javascript', src="../oauth.js")
   body
     #container
       header
@@ -13,18 +12,17 @@ html(lang="en")
       #wait
         Please wait...
       #allow
-
-  - if (redirectUri != undefined)
-      p
-        | UserId: #{userId}
-      p
-        | App: #{redirectUri}
-      p
-        | Categories: #{scope}
-        br
-      input(type="submit", value="Allow", onclick="go();")
+        p
+          | UserAddress: #{userAddress}
+        p
+          | App: #{redirectUri}
+        p
+          | Scope: #{scope}
+          br
+        input(type="submit", value="Allow", onclick="go();")
       form(method="POST")
+        input(type="hidden", id="userAddress", name="userAddress", value="#{userAddress}")
+        input(type="hidden", name="scope", value="#{scope}")
+        input(type="hidden", name="redirectUri", value="#{redirectUri}")
         input(type="hidden", id="assertion", name="assertion")
-  - else
-    p
-      Please add ?redirect_uri=http://localhost/bla to the address
+    script(type='text/javascript', src="../js/oauth.js")
