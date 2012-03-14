@@ -75,7 +75,8 @@ app.post(/^\/_oauth\/(?:(.+))/, function(req, res){
   storage.getToken({
     userAddress: req.param('userAddress'),
     assertion: req.param('assertion'),
-    scope: req.param('scope')
+    scope: req.param('scope'),
+    redirectUri: req.param('redirectUri')
   }, function(err, token) {
     if(!err) {
       res.redirect(req.param('redirectUri')+'#access_token='+token);
