@@ -2,12 +2,17 @@
 html(lang="en")
   head
     title #{title}
-    // link(href="/stylesheets/screen.css", media="screen, projection", rel="stylesheet", type="text/css")
+    link(href="/stylesheets/screen.css", media="screen, projection", rel="stylesheet", type="text/css")
+    script(type='text/javascript', src="https://browserid.org/include.js")
   body
     #container
       header
-        h1 #{title}
-      #content
-
-    script(type="text/javascript")
-      console.log("ohai");
+        h1 Express Storage
+        h2 Manage your account
+      #wait
+        Please wait...
+      #manage
+        input(type="submit", value="Manage", onclick="go();")
+      form(method="POST")
+        input(type="hidden", id="assertion", name="assertion")
+    script(type='text/javascript', src="../js/index.js")

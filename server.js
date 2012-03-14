@@ -70,18 +70,32 @@ app.get('/_oauth/:user', function(req, res){
   }
 });
 
-app.post(/^\/_oauth\/(?:(.+))/, function(req, res){
+app.post('/', function(req, res){
   //remember all actual input validation is done inside the createToken function:
+  storage.getTokens({
+    assertion: req.param('assertion'),
+  }, function(err, tokens) {
+    if(err) {
+      res.send("No, bro.", 401);
+    } else {
+      res.render('tokens', {
+        tokens:JSON.stringify(tokens)
+      });
+    }
+  });
+});
+app.post(/^\/_oauth\/(?:(.+))/, function(req, res){
+  //remember all actual input validation is done inside lib/express-storage:
   storage.getToken({
     userAddress: req.param('userAddress'),
     assertion: req.param('assertion'),
     scope: req.param('scope'),
     redirectUri: req.param('redirectUri')
   }, function(err, token) {
-    if(!err) {
-      res.redirect(req.param('redirectUri')+'#access_token='+token);
-    } else {
+    if(err) {
       res.send("No, bro.", 401);
+    } else {
+      res.redirect(req.param('redirectUri')+'#access_token='+token);
     }
   });
 });
