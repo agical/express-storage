@@ -4,7 +4,7 @@ function go() {
   navigator.id.get(function(assertion) {
     document.getElementById('assertion').value=assertion;
     document.forms[0].submit();
-  }, {
-    requiredEmail: document.getElementById('userAddress').value
+  //}, {
+  //  requiredEmail: document.getElementById('userAddress').value
   });
 }

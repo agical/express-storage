@@ -91,11 +91,12 @@ app.post(/^\/_oauth\/(?:(.+))/, function(req, res){
     assertion: req.param('assertion'),
     scope: req.param('scope'),
     redirectUri: req.param('redirectUri')
-  }, function(err, token) {
+  }, function(err, uri) {
     if(err) {
       res.send("No, bro.", 401);
     } else {
-      res.redirect(req.param('redirectUri')+'#access_token='+token);
+      console.log(uri);
+      res.redirect(uri);
     }
   });
 });
