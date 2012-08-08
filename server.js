@@ -77,10 +77,9 @@ app.post(/^\/_oauth\/(?:(.+))/, function(req, res){
     });
 });
 
-app.get("/create_user/:host/:user/:password", function(req, res){
-  storage.addUser(req.params.user + '@' + req.params.host, req.params.password, function(result){
-    res.send(result);  
-  });
+app.get("/create_test_user", function(req, res){
+  storage.addUser('jimmy@'+config.host, '12345678', function(){});
+  res.send("User created");
 });
 
 app.options('*', function(req, res){
@@ -123,14 +122,7 @@ app.all('/:user/:category/:key', function(req, res){
       console.log(reqObj);
 
       storage.doReq(reqObj, function(status_code, data) {
-          console.log(status_code, data);
-          if(data && data != 'null' && status_code == 200) {
-              console.log("Success");
-              res.send(data, status_code);
-          } else {
-              console.log("Fail");
-              res.send(null, 404);
-          }
+        res.send(data, status_code);
       });
     }
   }
