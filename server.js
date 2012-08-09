@@ -45,7 +45,7 @@ app.get('/.well-known/host-meta', function(req, res){
 });
 
 app.get(/^\/webfinger\/acct:(?:(.+))/, function(req, res){
-  var userId = req.params[0];
+  var userId = req.params[0].toLowerCase();
   config.api = 'simple';
   config.authUrl = 'http://'+config.host+'/_oauth/'+userId;
   config.template = 'http://'+config.host+'/'+userId+'/{category}/';
@@ -62,7 +62,7 @@ app.get('/_oauth/:user', function(req, res){
     scope: req.param('scope').toLowerCase()
   };
   //remember no real input validation can be done here yet, because this will construct a form that still goes to the client-side:
-  if(paramsObj.userAddress && paramsObj.redirectUri && paramsObj.scope && /^([a-z0-9_\.\-])+\@(([a-z0-9\-])+\.)+([a-z0-9]{2,4})+$/.test(paramsObj.userAddress)){
+  if(paramsObj.userAddress && paramsObj.redirectUri && paramsObj.scope && /^([a-z0-9_\.\-])+\@([a-z0-9\-])+$/.test(paramsObj.userAddress)){
     res.render('oauth', paramsObj);
   } else {
     //this error message is purely informational:
@@ -87,9 +87,9 @@ app.post('/', function(req, res){
 app.post(/^\/_oauth\/(?:(.+))/, function(req, res){
   //remember all actual input validation is done inside lib/express-storage:
   storage.getToken({
-    userAddress: req.param('userAddress'),
+    userAddress: req.param('userAddress').toLowerCase(),
     assertion: req.param('assertion'),
-    scope: req.param('scope'),
+    scope: req.param('scope').toLowerCase(),
     redirectUri: req.param('redirectUri')
   }, function(err, uri) {
     if(err) {
@@ -105,6 +105,13 @@ app.get("/create_test_user", function(req, res){
   storage.addUser('jimmy@'+config.host, '12345678', function(){});
   res.send("User created");
 });
+
+app.get("/create_user/:host/:user/:password", function(req, res){
+    storage.addUser(req.params.user.toLowerCase() + '@' + req.params.host.toLowerCase(), req.params.password, function(result){
+      res.send(result);  
+    });
+  });
+
 
 app.options('*', function(req, res){
   res.header('Access-Control-Allow-Origin', req.headers.origin);
@@ -124,8 +131,8 @@ app.all('/:user/:category/:key', function(req, res){
     reqObj = {
       method: req.method,
       token: auth_header.substring('Bearer '.length),
-      userId: req.params.user,
-      category: req.params.category,
+      userId: req.params.user.toLowerCase(),
+      category: req.params.category.toLowerCase(),
       key: req.params.key,
       value: ''
     };
