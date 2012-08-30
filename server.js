@@ -101,21 +101,26 @@ app.post(/^\/_oauth\/(?:(.+))/, function(req, res){
   });
 });
 
-app.get("/content", function(req, res){
-      res.send(util.format( storage.data ));  
+app.get("/storage", function(req, res) {
+      res.json(storage.data);
   });
 
-app.get("/get/:key", function(req, res){
+app.put("/storage/:key", function(req, res) {
+    console.log('PUTting Key: ', req.params.key);
+    console.log('PUTting Value: ', req.body);
+    req.accepts('json, text');
+    req.accepts('application/json');
+    storage.set(req.params.key, req.body, function(error, value) {
+      res.send(202, value);
+    });
+});
+
+app.get("/storage/:key", function(req, res) {
+    console.log('Got : ', req);
     storage.get(req.params.key, function(error, value){
       res.send(value);  
     });
-  });
-
-app.get("/put/:key/:value", function(req, res){
-    storage.set(req.params.key, req.params.value, function(error, value){
-      res.send(value);  
-    });
-  });
+});
 
 app.get("/create_user/:host/:user/:password", function(req, res){
     storage.addUser(req.params.user.toLowerCase() + '@' + req.params.host.toLowerCase(), req.params.password, function(result){
