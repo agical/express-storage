@@ -102,7 +102,7 @@ app.post(/^\/_oauth\/(?:(.+))/, function(req, res){
 });
 
 app.get("/content", function(req, res){
-      res.send(storage.data);  
+      res.send(util.format( storage.data ));  
   });
 
 app.get("/get/:key", function(req, res){

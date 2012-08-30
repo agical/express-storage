@@ -23,8 +23,7 @@
   ],
   "dependencies": {
     "express": "2.5.x",
-    "jade": "0.20.x",
-    "redis": "0.7.x"
+    "jade": "0.20.x"
   },
   "devDependencies": {
     "grunt": "~0.2.15"
