@@ -101,10 +101,21 @@ app.post(/^\/_oauth\/(?:(.+))/, function(req, res){
   });
 });
 
-app.get("/create_test_user", function(req, res){
-  storage.addUser('jimmy@'+config.host, '12345678', function(){});
-  res.send("User created");
-});
+app.get("/content", function(req, res){
+      res.send(storage.data);  
+  });
+
+app.get("/get/:key", function(req, res){
+    storage.get(req.params.key, function(error, value){
+      res.send(value);  
+    });
+  });
+
+app.get("/put/:key/:value", function(req, res){
+    storage.set(req.params.key, req.params.value, function(error, value){
+      res.send(value);  
+    });
+  });
 
 app.get("/create_user/:host/:user/:password", function(req, res){
     storage.addUser(req.params.user.toLowerCase() + '@' + req.params.host.toLowerCase(), req.params.password, function(result){
