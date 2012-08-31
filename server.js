@@ -101,10 +101,17 @@ app.post(/^\/_oauth\/(?:(.+))/, function(req, res){
   });
 });
 
+//
+// Dump the whole memory as JSON
+//
 app.get("/storage", function(req, res) {
       res.json(storage.data);
-  });
+});
 
+//
+// Update (or insert anew) the contents stored under
+// the given :key
+// 
 app.put("/storage/:key", function(req, res) {
     console.log('PUTting Key: ', req.params.key);
     console.log('PUTting Value: ', req.body);
@@ -115,6 +122,9 @@ app.put("/storage/:key", function(req, res) {
     });
 });
 
+//
+// Dump the contents under :key as JSON
+//
 app.get("/storage/:key", function(req, res) {
     console.log('Got : ', req);
     storage.get(req.params.key, function(error, value){
