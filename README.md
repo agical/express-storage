@@ -22,9 +22,19 @@ Changes include but are not necessarily limited to:
 
 In order to inspect the running, local stores in memory contents, use the following URLs:
 
-* GET [ http://localhost/storage ] _A complete dump of the memory storage, as JSON_
-* GET [ http://localhost/storage/<key> ] _Dump the contents under <key> as JSON_
-* PUT [ http://localhost/storage/<key> ] _Replace (or insert anew) any data mapped under <key>_
+__GET__ http://localhost/storage 
+
+_A complete dump of the memory storage, as JSON_
+
+
+__GET__ http://localhost/storage/key 
+
+_Dump the contents under "key" as JSON_
+
+
+__PUT__ http://localhost/storage/key 
+
+_Replace (or insert anew) any data mapped under "key"_
 
 ## Examples
 _(Coming soon)_
